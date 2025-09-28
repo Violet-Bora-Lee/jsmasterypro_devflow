@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
 import { IAccountDoc } from "./database/account.model";
@@ -11,7 +10,6 @@ import { SignInSchema } from "./lib/validations";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
-    GitHub,
     Google,
     Credentials({
       async authorize(credentials) {
@@ -73,7 +71,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       return token;
     },
-    async signIn({ user, profile, account }) {
+    async signIn({ user, account }) {
       if (account?.type === "credentials") return true;
       if (!account || !user) return false;
 
@@ -81,15 +79,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         name: user.name!,
         email: user.email!,
         image: user.image!,
-        username:
-          account.provider === "github"
-            ? (profile?.login as string)
-            : (user.name?.toLowerCase() as string),
+        username: user.name?.toLowerCase() as string,
       };
 
       const { success } = (await api.auth.oAuthSignIn({
         user: userInfo,
-        provider: account.provider as "github" | "google",
+        provider: account.provider as "google",
         providerAccountId: account.providerAccountId,
       })) as ActionResponse;
 
