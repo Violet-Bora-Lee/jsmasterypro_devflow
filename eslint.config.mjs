@@ -20,10 +20,34 @@ const config = [
     "next/core-web-vitals",
     "next/typescript",
     "standard",
-    // "plugin:tailwindcss/recommended",
+    "plugin:tailwindcss/recommended",
     "prettier"
   ),
   {
+    settings: {
+      tailwindcss: {
+        config: "tailwind.config.ts",
+        removeDuplicates: true,
+        skipClassAttribute: false,
+        whitelist: [
+          // Custom utility classes from globals.css
+          "flex-center",
+          "light-border",
+          "background-light[0-9]+_dark[0-9]+",
+          "text-dark[0-9]+_light[0-9]+",
+          "shadow-light-[0-9]+",
+          "dark:shadow-dark-[0-9]+",
+          "paragraph-semibold",
+          "body-medium",
+          "h3-semibold",
+          "small-semibold",
+          "subtle-medium",
+          "primary-text-gradient",
+          "xs:grid-cols-[0-9]+",
+          "background-light[0-9]+_dark[0-9]+",
+        ],
+      },
+    },
     rules: {
       "import/order": [
         "error",
@@ -56,6 +80,8 @@ const config = [
         },
       ],
       "comma-dangle": "off",
+      // Temporarily disable some TailwindCSS rules until proper configuration
+      "tailwindcss/no-custom-classname": "off",
     },
   },
   {
